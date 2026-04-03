@@ -1,0 +1,13 @@
+[2026-04-02 11:59:06] FALL DETECTED | {'torso_angle': np.float64(8.3), 'aspect_ratio': np.float64(0.18), 'hip_velocity': np.float64(0.384), 'is_fall': True}
+[2026-04-02 11:59:12] FALL DETECTED | {'torso_angle': np.float64(3.8), 'aspect_ratio': np.float64(0.27), 'hip_velocity': np.float64(0.189), 'is_fall': True}
+[2026-04-02 11:59:19] FALL DETECTED | {'torso_angle': np.float64(12.1), 'aspect_ratio': np.float64(0.07), 'hip_velocity': np.float64(0.159), 'is_fall': True}
+[2026-04-02 11:59:28] FALL DETECTED | {'torso_angle': np.float64(0.6), 'aspect_ratio': np.float64(0.25), 'hip_velocity': np.float64(0.236), 'is_fall': True}
+[2026-04-02 11:59:37] FALL DETECTED | {'torso_angle': np.float64(2.5), 'aspect_ratio': np.float64(0.18), 'hip_velocity': np.float64(0.198), 'is_fall': True}
+[2026-04-02 11:59:46] FALL DETECTED | {'torso_angle': np.float64(12.2), 'aspect_ratio': np.float64(0.37), 'hip_velocity': np.float64(0.155), 'is_fall': True}
+[2026-04-02 12:02:05] FALL DETECTED | {'torso_angle': np.float64(5.1), 'aspect_ratio': np.float64(0.18), 'hip_velocity': np.float64(0.27), 'is_fall': True}
+[2026-04-02 12:02:13] FALL DETECTED | {'torso_angle': np.float64(2.0), 'aspect_ratio': np.float64(0.26), 'hip_velocity': np.float64(0.16), 'is_fall': True}
+[2026-04-02 12:02:38] FALL DETECTED | {'torso_angle': np.float64(0.7), 'aspect_ratio': np.float64(0.47), 'hip_velocity': np.float64(0.224), 'is_fall': True}
+[2026-04-02 12:02:49] FALL DETECTED | {'torso_angle': np.float64(10.1), 'aspect_ratio': np.float64(0.16), 'hip_velocity': np.float64(0.155), 'is_fall': True}
+[2026-04-02 12:02:56] FALL DETECTED | {'torso_angle': np.float64(0.8), 'aspect_ratio': np.float64(0.26), 'hip_velocity': np.float64(0.297), 'is_fall': True}
+[2026-04-02 12:03:07] FALL DETECTED | {'torso_angle': np.float64(2.9), 'aspect_ratio': np.float64(0.19), 'hip_velocity': np.float64(0.151), 'is_fall': True}
+[2026-04-03 13:19:14] FALL DETECTED | {'torso_angle': np.float64(1.6), 'aspect_ratio': np.float64(0.24), 'hip_velocity': np.float64(0.164), 'is_fall': True}
