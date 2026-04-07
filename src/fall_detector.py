@@ -4,7 +4,7 @@
 # fall occurred. Uses rule-based logic as a baseline.
 # ─────────────────────────────────────────────────────────
 
-import numpy as np
+import math
 from collections import deque
 
 class FallDetector:
@@ -23,14 +23,16 @@ class FallDetector:
         Calculates the angle (degrees) of the line p1→p2
         relative to vertical (0° = standing, 90° = lying flat).
         """
-        delta = p2 - p1
-        angle_rad = np.arctan2(delta[0], delta[1])
-        angle_deg = np.degrees(angle_rad)
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        # use math.atan2 on scalars (faster than numpy for tiny vectors)
+        angle_rad = math.atan2(dx, dy)
+        angle_deg = math.degrees(angle_rad)
         return abs(angle_deg)
 
     def _get_mid(self, p1, p2):
         """Returns midpoint between two keypoints."""
-        return (p1 + p2) / 2
+        return ((p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0)
 
     def analyse(self,
                   left_shoulder, right_shoulder,
@@ -53,8 +55,9 @@ class FallDetector:
 
         # ── 3. Body bounding box aspect ratio ───────
         # tall person → ratio < 1. Fallen person → ratio > 1
-        body_width  = abs(left_shoulder[0] - right_ankle[0])
-        body_height = abs(mid_shoulder[1]  - mid_ankle[1])
+        # Compute a simple, robust body width: distance between shoulders
+        body_width = abs(left_shoulder[0] - right_shoulder[0])
+        body_height = abs(mid_shoulder[1] - mid_ankle[1])
         aspect_ratio = body_width / (body_height + 1e-6)
 
         # ── 4. Hip drop velocity ─────────────────────
@@ -63,10 +66,9 @@ class FallDetector:
         self.hip_y_history.append(hip_y_norm)
 
         hip_drop_velocity = 0.0
+        # Use a configurable short window; simple subtraction of floats is cheap
         if len(self.hip_y_history) >= 5:
-            # Change in hip Y over the last 5 frames
-            hip_drop_velocity = (self.hip_y_history[-1]
-                                  - self.hip_y_history[-5])
+            hip_drop_velocity = self.hip_y_history[-1] - self.hip_y_history[-5]
 
         # ── 5. Fall decision rules ───────────────────
         #   Rule A: torso tilted past 60° AND body is wide
@@ -82,9 +84,9 @@ class FallDetector:
             self.fall_cooldown -= 1
 
         debug_info = {
-            "torso_angle"   : round(torso_angle, 1),
-            "aspect_ratio"  : round(aspect_ratio, 2),
-            "hip_velocity"  : round(hip_drop_velocity, 3),
-            "is_fall"       : is_fall,
+            "torso_angle": round(torso_angle, 1),
+            "aspect_ratio": round(aspect_ratio, 2),
+            "hip_velocity": round(hip_drop_velocity, 3),
+            "is_fall": is_fall,
         }
         return is_fall, debug_info

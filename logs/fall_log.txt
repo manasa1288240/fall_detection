@@ -11,3 +11,8 @@
 [2026-04-02 12:02:56] FALL DETECTED | {'torso_angle': np.float64(0.8), 'aspect_ratio': np.float64(0.26), 'hip_velocity': np.float64(0.297), 'is_fall': True}
 [2026-04-02 12:03:07] FALL DETECTED | {'torso_angle': np.float64(2.9), 'aspect_ratio': np.float64(0.19), 'hip_velocity': np.float64(0.151), 'is_fall': True}
 [2026-04-03 13:19:14] FALL DETECTED | {'torso_angle': np.float64(1.6), 'aspect_ratio': np.float64(0.24), 'hip_velocity': np.float64(0.164), 'is_fall': True}
+[2026-04-07 15:15:16] FALL DETECTED | {'torso_angle': np.float64(4.8), 'aspect_ratio': np.float64(0.22), 'hip_velocity': np.float64(0.525), 'is_fall': True}
+[2026-04-07 15:15:22] FALL DETECTED | {'torso_angle': np.float64(10.6), 'aspect_ratio': np.float64(0.36), 'hip_velocity': np.float64(0.162), 'is_fall': True}
+[2026-04-07 15:15:31] FALL DETECTED | {'torso_angle': np.float64(3.1), 'aspect_ratio': np.float64(0.12), 'hip_velocity': np.float64(0.205), 'is_fall': True}
+[2026-04-07 15:16:13] FALL DETECTED | {'torso_angle': np.float64(7.0), 'aspect_ratio': np.float64(0.3), 'hip_velocity': np.float64(0.178), 'is_fall': True}
+[2026-04-07 15:16:20] FALL DETECTED | {'torso_angle': np.float64(1.2), 'aspect_ratio': np.float64(0.12), 'hip_velocity': np.float64(0.192), 'is_fall': True}

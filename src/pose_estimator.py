@@ -62,7 +62,8 @@ class PoseEstimator:
         lm = landmarks.landmark[index]
         x  = int(lm.x * frame_w)
         y  = int(lm.y * frame_h)
-        return np.array([x, y])
+        # return a lightweight tuple (avoid allocating numpy arrays per keypoint)
+        return (x, y)
 
     def close(self):
         self.pose.close()
