@@ -102,5 +102,7 @@ class FallDetector:
             "fallen_frames": self.fallen_frames,
             "threshold": self.fallen_threshold,
             "is_fall": is_fall,
+            "rule_a": rule_a,
+            "rule_b": rule_b,
         }
         return is_fall, debug_info

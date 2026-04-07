@@ -44,6 +44,17 @@ def draw_debug(frame, info, display_fall):
             f"Hip velocity: {info['hip_velocity']}",
             f"Fallen frames: {info['fallen_frames']}/{info['threshold']}",
         ]
+        if display_fall:
+            reasons = []
+            if info.get('rule_a'):
+                reasons.append("Posture/Angle")
+            if info.get('rule_b'):
+                reasons.append("Rapid Drop")
+            if reasons:
+                reason_str = " & ".join(reasons)
+                lines.append(f"Reason: {reason_str}")
+            else:
+                lines.append("Reason: Unknown")
         for i, line in enumerate(lines):
             cv2.putText(frame, line, (10, 90 + i * 28),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.65,
