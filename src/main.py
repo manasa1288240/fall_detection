@@ -6,10 +6,12 @@
 import cv2
 import datetime
 import os
+import threading
 
 from preprocess     import preprocess_frame
 from pose_estimator import PoseEstimator
 from fall_detector  import FallDetector
+from alert          import play_alert_sound
 
 # ── Config ────────────────────────────────────────────────
 CAMERA_INDEX = 0         # change to 1 if webcam not found
@@ -51,6 +53,7 @@ def main():
     estimator = PoseEstimator()
     detector  = FallDetector()
     display_fall_frames = 0  # frames to display fall alert on screen
+    alert_cooldown = 0       # frames to wait before allowing another alert sound
 
     if not cap.isOpened():
         print("[ERROR] Camera not found. Run camera_test.py first.")
@@ -88,10 +91,16 @@ def main():
             if is_fall:
                 log_fall(info)
                 display_fall_frames = 120  # display for 4 seconds at 30fps
+                if alert_cooldown == 0:
+                    threading.Thread(target=play_alert_sound).start()
+                    alert_cooldown = 120  # cooldown for 4 seconds
 
             # Update display timer
             if display_fall_frames > 0:
                 display_fall_frames -= 1
+
+            if alert_cooldown > 0:
+                alert_cooldown -= 1
 
             display_fall = display_fall_frames > 0
 
