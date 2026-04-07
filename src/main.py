@@ -64,6 +64,10 @@ def draw_debug(frame, info, display_fall):
 
 def main():
     cap      = cv2.VideoCapture(CAMERA_INDEX)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    cv2.namedWindow("Fall Detection System", cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty("Fall Detection System", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     estimator = PoseEstimator()
     detector  = FallDetector()
     display_fall_frames = 0  # frames to display fall alert on screen
