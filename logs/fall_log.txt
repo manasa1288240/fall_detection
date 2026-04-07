@@ -43,3 +43,4 @@
 [2026-04-07 18:38:51] FALL DETECTED | {'torso_angle': 12.9, 'aspect_ratio': 0.06, 'hip_velocity': 0.178, 'fallen_frames': 0, 'threshold': 1, 'is_fall': True, 'rule_a': False, 'rule_b': True}
 [2026-04-07 18:39:00] FALL DETECTED | {'torso_angle': 2.4, 'aspect_ratio': 0.13, 'hip_velocity': 0.189, 'fallen_frames': 0, 'threshold': 1, 'is_fall': True, 'rule_a': False, 'rule_b': True}
 [2026-04-07 18:39:12] FALL DETECTED | {'torso_angle': 20.6, 'aspect_ratio': 0.21, 'hip_velocity': 0.84, 'fallen_frames': 0, 'threshold': 1, 'is_fall': True, 'rule_a': False, 'rule_b': True}
+[2026-04-07 19:11:29] FALL DETECTED | {'torso_angle': 3.8, 'aspect_ratio': 0.89, 'hip_velocity': 0.182, 'fallen_frames': 0, 'threshold': 1, 'is_fall': True, 'rule_a': False, 'rule_b': True}

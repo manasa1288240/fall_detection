@@ -15,9 +15,10 @@ from alert          import play_alert_sound
 
 # ── Config ────────────────────────────────────────────────
 CAMERA_INDEX = 0         # change to 1 if webcam not found
-LOG_DIR      = "../logs"
-SCREENSHOTS_DIR = "../screenshots"
-SHOW_DEBUG   = True       # show angle/ratio info on screen
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+SCREENSHOTS_DIR = os.path.join(BASE_DIR, "screenshots")
+SHOW_DEBUG = True         # show angle/ratio info on screen
 
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
@@ -113,7 +114,7 @@ def main():
                     filename = f"fall_{timestamp}.jpg"
                     filepath = os.path.join(SCREENSHOTS_DIR, filename)
                     cv2.imwrite(filepath, frame)
-                    print(f"[SCREENSHOT] Saved {filename}")
+                    print(f"[SCREENSHOT] Saved {filepath}")
                     screenshot_cooldown = 120  # cooldown for 4 seconds
 
             # Update display timer
