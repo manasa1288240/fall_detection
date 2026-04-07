@@ -26,10 +26,10 @@ def log_fall(info):
         f.write(f"[{timestamp}] FALL DETECTED | {info}\n")
     print(f"[ALERT] Fall logged at {timestamp}")
 
-def draw_debug(frame, info, is_fall):
+def draw_debug(frame, info, display_fall):
     """Overlays debug info on the frame."""
-    colour = (0, 0, 255) if is_fall else (0, 255, 100)
-    label  = "!! FALL DETECTED !!" if is_fall else "Normal"
+    colour = (0, 0, 255) if display_fall else (0, 255, 100)
+    label  = "!! FALL DETECTED !!" if display_fall else "Normal"
     cv2.putText(frame, label, (10, 40),
                 cv2.FONT_HERSHEY_SIMPLEX, 1.2, colour, 3)
 
@@ -38,6 +38,7 @@ def draw_debug(frame, info, is_fall):
             f"Torso angle : {info['torso_angle']} deg",
             f"Aspect ratio: {info['aspect_ratio']}",
             f"Hip velocity: {info['hip_velocity']}",
+            f"Fallen frames: {info['fallen_frames']}/{info['threshold']}",
         ]
         for i, line in enumerate(lines):
             cv2.putText(frame, line, (10, 90 + i * 28),
@@ -49,6 +50,7 @@ def main():
     cap      = cv2.VideoCapture(CAMERA_INDEX)
     estimator = PoseEstimator()
     detector  = FallDetector()
+    display_fall_frames = 0  # frames to display fall alert on screen
 
     if not cap.isOpened():
         print("[ERROR] Camera not found. Run camera_test.py first.")
@@ -85,8 +87,15 @@ def main():
 
             if is_fall:
                 log_fall(info)
+                display_fall_frames = 120  # display for 4 seconds at 30fps
 
-            frame = draw_debug(frame, info, is_fall)
+            # Update display timer
+            if display_fall_frames > 0:
+                display_fall_frames -= 1
+
+            display_fall = display_fall_frames > 0
+
+            frame = draw_debug(frame, info, display_fall)
 
         cv2.imshow("Fall Detection System", frame)
         if cv2.waitKey(1) & 0xFF == ord('q'): break

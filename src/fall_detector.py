@@ -13,10 +13,12 @@ class FallDetector:
     Returns True if a fall is detected.
     """
 
-    def __init__(self, history_len=15):
+    def __init__(self, history_len=15, fallen_threshold=1):
         # Store last N hip positions to detect rapid drops
         self.hip_y_history = deque(maxlen=history_len)
         self.fall_cooldown = 0   # prevents repeated alerts
+        self.fallen_frames = 0   # consecutive frames in fallen state
+        self.fallen_threshold = fallen_threshold  # frames to confirm fall
 
     def _calculate_angle(self, p1, p2):
         """
@@ -76,17 +78,29 @@ class FallDetector:
         rule_a = (torso_angle > 60) and (aspect_ratio > 1.2)
         rule_b = hip_drop_velocity > 0.15
 
-        is_fall = (rule_a or rule_b) and self.fall_cooldown == 0
+        fallen = rule_a or rule_b
 
-        if is_fall:
-            self.fall_cooldown = 60  # wait 60 frames before next alert
-        elif self.fall_cooldown > 0:
+        if fallen:
+            self.fallen_frames += 1
+            if self.fallen_frames >= self.fallen_threshold and self.fall_cooldown == 0:
+                is_fall = True
+                self.fall_cooldown = 60
+                self.fallen_frames = 0  # reset after alert
+            else:
+                is_fall = False
+        else:
+            self.fallen_frames = 0
+            is_fall = False
+
+        if self.fall_cooldown > 0:
             self.fall_cooldown -= 1
 
         debug_info = {
             "torso_angle": round(torso_angle, 1),
             "aspect_ratio": round(aspect_ratio, 2),
             "hip_velocity": round(hip_drop_velocity, 3),
+            "fallen_frames": self.fallen_frames,
+            "threshold": self.fallen_threshold,
             "is_fall": is_fall,
         }
         return is_fall, debug_info
