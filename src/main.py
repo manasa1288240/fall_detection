@@ -16,9 +16,11 @@ from alert          import play_alert_sound
 # ── Config ────────────────────────────────────────────────
 CAMERA_INDEX = 0         # change to 1 if webcam not found
 LOG_DIR      = "../logs"
+SCREENSHOTS_DIR = "../screenshots"
 SHOW_DEBUG   = True       # show angle/ratio info on screen
 
 os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 
 def log_fall(info):
     """Saves fall event with timestamp to a log file."""
@@ -54,6 +56,7 @@ def main():
     detector  = FallDetector()
     display_fall_frames = 0  # frames to display fall alert on screen
     alert_cooldown = 0       # frames to wait before allowing another alert sound
+    screenshot_cooldown = 0  # frames to wait before allowing another screenshot
 
     if not cap.isOpened():
         print("[ERROR] Camera not found. Run camera_test.py first.")
@@ -94,6 +97,13 @@ def main():
                 if alert_cooldown == 0:
                     threading.Thread(target=play_alert_sound).start()
                     alert_cooldown = 120  # cooldown for 4 seconds
+                if screenshot_cooldown == 0:
+                    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"fall_{timestamp}.jpg"
+                    filepath = os.path.join(SCREENSHOTS_DIR, filename)
+                    cv2.imwrite(filepath, frame)
+                    print(f"[SCREENSHOT] Saved {filename}")
+                    screenshot_cooldown = 120  # cooldown for 4 seconds
 
             # Update display timer
             if display_fall_frames > 0:
@@ -101,6 +111,9 @@ def main():
 
             if alert_cooldown > 0:
                 alert_cooldown -= 1
+
+            if screenshot_cooldown > 0:
+                screenshot_cooldown -= 1
 
             display_fall = display_fall_frames > 0
 
