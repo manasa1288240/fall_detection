@@ -22,14 +22,31 @@ os.makedirs(SCREENSHOTS_DIR, exist_ok=True)
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 def preprocess_frame(frame):
-    """Improve lighting and contrast."""
-    # Convert to LAB color space
+    """Improve lighting and contrast for robust detection in varying lighting conditions."""
+    # Apply noise reduction first
+    frame = cv2.bilateralFilter(frame, 9, 75, 75)
+    
+    # Convert to LAB color space for better lighting adjustment
     lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
-    # Apply CLAHE to L channel
-    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+    
+    # Apply stronger CLAHE for dramatic lighting difference handling
+    clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(12, 12))
     l = clahe.apply(l)
-    # Merge and convert back
+    
+    # Normalize brightness to handle very dark/bright scenes
+    brightness = cv2.mean(l)[0]
+    if brightness < 80:
+        # Scene is too dark, boost it
+        l = cv2.convertScaleAbs(l, alpha=1.3, beta=30)
+    elif brightness > 200:
+        # Scene is too bright, reduce it slightly
+        l = cv2.convertScaleAbs(l, alpha=0.9, beta=0)
+    
+    # Ensure values stay in valid range
+    l = np.clip(l, 0, 255).astype(np.uint8)
+    
+    # Merge and convert back to BGR
     lab = cv2.merge([l, a, b])
     return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
