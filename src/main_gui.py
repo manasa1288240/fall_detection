@@ -42,6 +42,28 @@ def log_fall(info):
         f.write(log_entry)
     print(f"[ALERT] {log_entry.strip()}")
 
+
+def draw_debug(frame, info, display_fall):
+    """Overlay detection metrics on the video frame."""
+    colour = (0, 0, 255) if display_fall else (0, 255, 100)
+    label = "!! FALL DETECTED !!" if display_fall else "Normal"
+    cv2.putText(frame, label, (10, 40),
+                cv2.FONT_HERSHEY_SIMPLEX, 1.0, colour, 2)
+
+    if info is not None:
+        lines = [
+            f"Torso angle : {info.get('torso_angle', 0)} deg",
+            f"Leg angle   : {info.get('leg_angle', 0)} deg",
+            f"Aspect ratio: {info.get('aspect_ratio', 0)}",
+            f"Hip vel     : {info.get('hip_velocity', 0)}",
+            f"Fallen frms : {info.get('fallen_frames', 0)}/{info.get('threshold', 0)}",
+        ]
+        for i, line in enumerate(lines):
+            cv2.putText(frame, line, (10, 80 + i * 26),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                        (255, 255, 255), 2)
+    return frame
+
 class CameraThread(QThread):
     frame_ready = pyqtSignal(np.ndarray)
     fall_detected = pyqtSignal(dict)
@@ -90,6 +112,7 @@ class CameraThread(QThread):
                 
                 # Fall detection
                 is_fall, info = self.detector.analyse(L_SH, R_SH, L_HIP, R_HIP, L_ANK, R_ANK, h)
+                frame = draw_debug(frame, info, is_fall)
                 
                 if is_fall:
                     self.fall_detected.emit(info)
@@ -241,7 +264,7 @@ class MainWindow(QMainWindow):
             threading.Thread(target=play_alert_sound).start()
             self.camera_thread.alert_cooldown = 120
         self.statusBar().showMessage("FALL DETECTED!", 5000)
-    
+
     def show_camera_settings(self):
         # Placeholder for camera settings dialog
         pass
