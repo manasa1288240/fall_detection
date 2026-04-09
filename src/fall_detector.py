@@ -13,31 +13,31 @@ class FallDetector:
     Returns True if a fall is detected.
     """
 
-    def __init__(self, history_len=15, fallen_threshold=3):
+    def __init__(self, history_len=15, fallen_threshold=2):
         # Store last N hip positions to detect rapid drops
         self.hip_y_history = deque(maxlen=history_len)
         self.fall_cooldown = 0   # prevents repeated alerts
         self.fallen_frames = 0   # consecutive frames in fallen state
         self.fallen_threshold = fallen_threshold  # frames to confirm fall
 
-        # Default thresholds for a balanced fall detector
-        self.angle_threshold = 65.0
-        self.aspect_threshold = 1.2
-        self.leg_angle_threshold = 42.0
-        self.drop_threshold = 0.16
-        self.low_hip_threshold = 0.60
+        # Default thresholds for a more sensitive fall detector
+        self.angle_threshold = 60.0
+        self.aspect_threshold = 1.1
+        self.leg_angle_threshold = 38.0
+        self.drop_threshold = 0.14
+        self.low_hip_threshold = 0.58
 
     def set_sensitivity(self, level):
         """Adjust thresholds for the sensitivity slider (1 = strict, 10 = sensitive)."""
         level = max(1, min(10, level))
-        self.fallen_threshold = 5 if level <= 3 else 4 if level <= 7 else 3
-        sensitivity_factor = 1.0 - (level - 5) * 0.04
+        self.fallen_threshold = 4 if level <= 3 else 3 if level <= 7 else 2
+        sensitivity_factor = 1.0 - (level - 5) * 0.035
 
-        self.angle_threshold = max(55.0, 68.0 * sensitivity_factor)
-        self.aspect_threshold = max(1.0, 1.25 * sensitivity_factor)
-        self.leg_angle_threshold = max(38.0, 52.0 * sensitivity_factor)
-        self.drop_threshold = max(0.12, 0.16 * sensitivity_factor)
-        self.low_hip_threshold = max(0.56, 0.62 * sensitivity_factor)
+        self.angle_threshold = max(52.0, 63.0 * sensitivity_factor)
+        self.aspect_threshold = max(0.95, 1.15 * sensitivity_factor)
+        self.leg_angle_threshold = max(35.0, 48.0 * sensitivity_factor)
+        self.drop_threshold = max(0.11, 0.14 * sensitivity_factor)
+        self.low_hip_threshold = max(0.54, 0.60 * sensitivity_factor)
 
     def _calculate_angle(self, p1, p2):
         """
@@ -106,9 +106,9 @@ class FallDetector:
         )
 
         rule_low_body = (
-            hip_y_norm > 0.72 and
-            torso_angle > 55 and
-            aspect_ratio > 1.05
+            hip_y_norm > 0.70 and
+            torso_angle > 50 and
+            aspect_ratio > 1.0
         )
 
         fallen = rule_posture or rule_rapid_drop or rule_low_body

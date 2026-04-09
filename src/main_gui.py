@@ -112,10 +112,10 @@ class CameraThread(QThread):
                 
                 # Fall detection
                 is_fall, info = self.detector.analyse(L_SH, R_SH, L_HIP, R_HIP, L_ANK, R_ANK, h)
-                frame = draw_debug(frame, info, is_fall)
                 
                 if is_fall:
                     self.fall_detected.emit(info)
+                    self.display_fall_frames = 150  # Show fall for 5 seconds at 30fps
                     
                     # Screenshot
                     if self.screenshot_cooldown == 0:
@@ -125,8 +125,16 @@ class CameraThread(QThread):
                         cv2.imwrite(filepath, self.current_frame)
                         print(f"[SCREENSHOT] Saved {filepath}")
                         self.screenshot_cooldown = 120  # 4 seconds at 30fps
+                
+                # Determine if we should show fall indicator
+                display_fall = self.display_fall_frames > 0
+                frame = draw_debug(frame, info, display_fall)
             
             self.frame_ready.emit(frame)
+            
+            # Update display timer
+            if self.display_fall_frames > 0:
+                self.display_fall_frames -= 1
             
             # Update cooldowns
             if self.alert_cooldown > 0:
